@@ -25,6 +25,20 @@ con.connect((err) => {
   console.log("Connected to joga_mysql db");
 });
 
+app.get("/", (req, res) => {
+  console.log("--> Brauser tegi päringu!"); 
+
+  con.query("SELECT * FROM article", (err, results) => {
+    if (err) {
+      console.error("MySQL päringu viga:", err.message);
+      return res.status(500).send("Andmebaasi viga: " + err.message);
+    }
+    
+    console.log("Leitud artiklid:", results);
+    res.render("index", { articles: results });
+  });
+});
+
 app.listen(3003, () => {
     console.log("App is started at http://localhost:3003");
 });
