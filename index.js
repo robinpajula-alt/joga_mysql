@@ -56,6 +56,33 @@ app.get("/article/:slug", (req, res) => {
   });
 });
 
+app.get("/author/:id", (req, res) => {
+  const authorId = req.params.id;
+
+  con.query("SELECT * FROM author WHERE id = ?", [authorId], (err, authorResult) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Andmebaasi viga");
+    }
+
+    if (authorResult.length === 0) {
+      return res.status(404).send("Autorit ei leitud");
+    }
+
+    con.query("SELECT * FROM article WHERE author_id = ?", [authorId], (err, articlesResult) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Andmebaasi viga");
+      }
+
+      res.render("author", {
+        author: authorResult[0],
+        articles: articlesResult
+      });
+    });
+  });
+});
+
 app.listen(3003, () => {
     console.log("App is started at http://localhost:3003");
 });

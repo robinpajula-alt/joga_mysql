@@ -1,0 +1,10 @@
+<h1>Author: {{author.name}}</h1>
+
+<h2>Articles by {{author.name}}:</h2>
+<ul>
+  {{#each articles}}
+    <li>
+      <a href="/article/{{slug}}">{{name}}</a>
+    </li>
+  {{/each}}
+</ul>
