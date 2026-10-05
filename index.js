@@ -40,17 +40,21 @@ app.get("/", (req, res) => {
 });
 
 app.get("/article/:slug", (req, res) => {
-  let query = `SELECT * FROM article WHERE slug = "${req.params.slug}"`;
-  let article
-  con.query(query, (err, result) => {
+  let query = `
+    SELECT article.*, author.name AS author_name 
+    FROM article 
+    JOIN author ON article.author_id = author.id 
+    WHERE article.slug = ?
+  `;
+
+  con.query(query, [req.params.slug], (err, result) => {
     if (err) throw err;
-    article = result
-    console.log(article);
-    res.render("article",{
-      article: article
-    } )
+    console.log("Artikkel koos autoriga:", result);
+    res.render("article", {
+      article: result
+    });
   });
-}); 
+});
 
 app.listen(3003, () => {
     console.log("App is started at http://localhost:3003");
